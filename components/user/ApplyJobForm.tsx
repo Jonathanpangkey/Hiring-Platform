@@ -2,7 +2,7 @@
 
 import {useState, useEffect, useMemo} from "react";
 import {useParams, useRouter} from "next/navigation";
-import {ArrowLeft, Camera, Check, ChevronsUpDown} from "lucide-react";
+import {ArrowLeft, Camera, Check, ChevronsUpDown, Loader2} from "lucide-react";
 import {useJobStore} from "@/app/store/jobStore";
 import {useCandidateStore} from "@/app/store/candidateStore";
 import {Button} from "@/components/ui/button";
@@ -11,6 +11,9 @@ import {toast} from "sonner";
 import provinces from "@/data/province";
 import countryNumber from "@/data/country-no";
 import {cn} from "@/lib/utils";
+import {uploadCandidatePhoto} from "@/lib/supabase";
+import {generateId} from "@/app/lib/utils/utils";
+import {validateForm, isValidLinkedInUrl} from "@/lib/utils";
 import type {FormData, FormField, CountryCode} from "@/app/types/jobType";
 
 export default function ApplyJobForm() {
@@ -26,6 +29,8 @@ export default function ApplyJobForm() {
   const [searchDomicile, setSearchDomicile] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(countryNumber[0]);
   const [photoPreview, setPhotoPreview] = useState<string>("/images/profil-avatar.png");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     full_name: "",
     date_of_birth: "",
@@ -70,10 +75,15 @@ export default function ApplyJobForm() {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size must be less than 5MB");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result as string);
-        setFormData((prev) => ({...prev, photo_profile: file}));
+        setPhotoFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -90,60 +100,58 @@ export default function ApplyJobForm() {
     }
   };
 
-  const isValidLinkedInUrl = (url: string): boolean => {
-    if (!url) return false;
-    return url.includes("linkedin.com/in/") || url.includes("linkedin.com");
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    fields.forEach((field) => {
-      if (field.validation === "mandatory") {
-        const value = formData[field.key as keyof FormData];
-        if (!value || (typeof value === "string" && !value.trim())) {
-          newErrors[field.key] = `${field.label} is required`;
-        }
-      }
-    });
-
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (formData.linkedin_link && !isValidLinkedInUrl(formData.linkedin_link)) {
-      newErrors.linkedin_link = "Invalid LinkedIn URL";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
+    const newErrors = validateForm(fields, formData, photoFile, photoPreview); // Use the validateForm function
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       toast.error("Please fill all required fields");
       return;
     }
 
-    const attributes = fields
-      .filter((field) => field.key !== "photo_profile")
-      .map((field, index) => ({
-        key: field.key,
-        label: field.label,
-        value: (formData[field.key as keyof FormData] as string) || "",
-        order: index + 1,
-      }));
+    setIsUploading(true);
 
-    addCandidate({
-      job_id: jobId,
-      attributes,
-      photo_url: photoPreview !== "/images/default-avatar.png" ? photoPreview : "",
-    });
+    try {
+      let photoUrl = "";
 
-    toast.success("Application submitted successfully!");
-    setTimeout(() => router.push("/apply/success"), 1500);
+      if (photoFile) {
+        const candidateId = generateId("candidate");
+        const uploadedUrl = await uploadCandidatePhoto(photoFile, candidateId);
+
+        if (!uploadedUrl) {
+          toast.error("Failed to upload photo. Please try again.");
+          setIsUploading(false);
+          return;
+        }
+
+        photoUrl = uploadedUrl;
+      }
+
+      const attributes = fields
+        .filter((field) => field.key !== "photo_profile")
+        .map((field, index) => ({
+          key: field.key,
+          label: field.label,
+          value: (formData[field.key as keyof FormData] as string) || "",
+          order: index + 1,
+        }));
+
+      addCandidate({
+        job_id: jobId,
+        attributes,
+        photo_url: photoUrl,
+      });
+
+      toast.success("Application submitted successfully!");
+      setTimeout(() => router.push("/apply/success"), 1500);
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("Failed to submit application. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const getFieldByKey = (key: string) => fields.find((field) => field.key === key);
@@ -151,7 +159,10 @@ export default function ApplyJobForm() {
   if (!mounted) {
     return (
       <div className='min-h-screen flex items-center justify-center bg-neutral-50'>
-        <div className='text-neutral-500'>Loading...</div>
+        <div className='flex flex-col items-center gap-3'>
+          <Loader2 className='w-8 h-8 text-primary-main animate-spin' />
+          <p className='text-neutral-500'>Loading...</p>
+        </div>
       </div>
     );
   }
@@ -185,21 +196,35 @@ export default function ApplyJobForm() {
               {getFieldByKey("photo_profile") && (
                 <div>
                   <div className='flex items-center gap-6'>
-                    <div className='w-32 h-32 rounded-full bg-neutral-100 overflow-hidden border-2 border-neutral-200'>
+                    <div className='w-32 h-32 rounded-full bg-neutral-100 overflow-hidden border-2 border-neutral-200 relative'>
                       <img src={photoPreview} alt='Profile preview' className='w-full h-full object-cover' />
+                      {isUploading && (
+                        <div className='absolute inset-0 bg-black/50 flex items-center justify-center'>
+                          <Loader2 className='w-8 h-8 text-white animate-spin' />
+                        </div>
+                      )}
                     </div>
 
                     <div>
-                      <input type='file' capture='user' id='photo-upload' accept='image/*' onChange={handlePhotoUpload} className='hidden' />
+                      <input
+                        type='file'
+                        capture='user'
+                        id='photo-upload'
+                        accept='image/*'
+                        onChange={handlePhotoUpload}
+                        className='hidden'
+                        disabled={isUploading}
+                      />
                       <Button
                         type='button'
                         variant='outline'
                         onClick={() => document.getElementById("photo-upload")?.click()}
-                        className='border-secondary-main text-neutral-900 hover:bg-secondary-50 shadow-button'>
+                        className='border-secondary-main text-neutral-900 hover:bg-secondary-50 shadow-button'
+                        disabled={isUploading}>
                         <Camera className='w-4 h-4 mr-2' />
                         Take a Picture
                       </Button>
-                      <p className='text-xs text-neutral-500 mt-2'>Click to upload or take a photo</p>
+                      <p className='text-xs text-neutral-500 mt-2'>Max 5MB • JPG, PNG, or WebP</p>
                     </div>
                   </div>
 
@@ -452,8 +477,16 @@ export default function ApplyJobForm() {
             type='submit'
             form='apply-form'
             onClick={handleSubmit}
+            disabled={isUploading}
             className='w-full bg-primary-main hover:bg-primary-dark text-white font-semibold shadow-button h-12'>
-            Submit
+            {isUploading ? (
+              <>
+                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                Uploading...
+              </>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </div>
       </div>

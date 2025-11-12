@@ -6,43 +6,28 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Candidate} from "@/app/types/jobType";
+import {Candidate, ColumnConfig, FilterConfig, SortConfig} from "@/app/types/jobType";
 import {formatDate} from "@/app/lib/utils/utils";
-import {ChevronUp, ChevronDown, ChevronsUpDown, GripVertical, X, Filter as FilterIcon} from "lucide-react";
+import {ChevronUp, ChevronDown, ChevronsUpDown, GripVertical, X, Filter} from "lucide-react";
 
 interface CandidateTableProps {
   candidates: Candidate[];
 }
 
-interface ColumnConfig {
-  key: string;
-  label: string;
-  width: number;
-  visible: boolean;
-}
-
-type SortConfig = {
-  key: string;
-  direction: "asc" | "desc";
-} | null;
-
-type FilterConfig = {
-  [key: string]: string;
-};
-
 export default function CandidateTable({candidates}: CandidateTableProps) {
   const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
   const [columns, setColumns] = useState<ColumnConfig[]>([
-    {key: "full_name", label: "Nama Lengkap", width: 180, visible: true},
-    {key: "email", label: "Email Address", width: 200, visible: true},
-    {key: "phone_number", label: "Phone Numbers", width: 150, visible: true},
-    {key: "date_of_birth", label: "Date of Birth", width: 140, visible: true},
-    {key: "domicile", label: "Domicile", width: 150, visible: true},
-    {key: "gender", label: "Gender", width: 100, visible: true},
-    {key: "linkedin_link", label: "Link LinkedIn", width: 200, visible: true},
+    {key: "photo_url", label: "Photo", width: 180, visible: true},
+    {key: "full_name", label: "Nama Lengkap", width: 200, visible: true},
+    {key: "email", label: "Email Address", width: 220, visible: true},
+    {key: "phone_number", label: "Phone Numbers", width: 160, visible: true},
+    {key: "date_of_birth", label: "Date of Birth", width: 150, visible: true},
+    {key: "domicile", label: "Domicile", width: 160, visible: true},
+    {key: "gender", label: "Gender", width: 110, visible: true},
+    {key: "linkedin_link", label: "Link LinkedIn", width: 220, visible: true},
   ]);
 
-  const [sortConfig, setSortConfig] = useState<SortConfig>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({key: "", direction: "asc"});
   const [filters, setFilters] = useState<FilterConfig>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -56,17 +41,21 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
   const resizeStartWidth = useRef(0);
 
   const getAttributeValue = (candidate: Candidate, key: string) => {
+    if (key === "photo_url") {
+      return candidate.photo_url || "-";
+    }
+
     const attr = candidate.attributes.find((a) => a.key === key);
     return attr?.value || "-";
   };
 
   const handleSort = (key: string) => {
     setSortConfig((current) => {
-      if (current?.key === key) {
+      if (current.key === key) {
         if (current.direction === "asc") {
           return {key, direction: "desc"};
         }
-        return null;
+        return {key: "", direction: "asc"}; // Reset to default
       }
       return {key, direction: "asc"};
     });
@@ -103,7 +92,6 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
       });
     });
 
-    // Apply sorting
     if (sortConfig) {
       result.sort((a, b) => {
         const aValue = getAttributeValue(a, sortConfig.key);
@@ -261,6 +249,7 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
         </div>
       </div>
 
+      {/* Table */}
       <div className='bg-white rounded-lg border border-neutral-200 overflow-hidden'>
         <div className='overflow-x-auto'>
           <table className='w-full'>
@@ -291,7 +280,6 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
                           {renderSortIcon(column.key)}
                         </button>
 
-                        {/* Filter Popover */}
                         <Popover open={openFilterPopover === column.key} onOpenChange={(open) => setOpenFilterPopover(open ? column.key : null)}>
                           <PopoverTrigger asChild>
                             <button
@@ -299,7 +287,7 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
                                 filters[column.key] ? "text-primary-main" : "text-neutral-400"
                               }`}
                               onClick={(e) => e.stopPropagation()}>
-                              <FilterIcon className='h-3.5 w-3.5' />
+                              <Filter className='h-3.5 w-3.5' />
                             </button>
                           </PopoverTrigger>
                           <PopoverContent className='w-64 p-3 bg-white' align='start'>
@@ -334,19 +322,19 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
 
                       <div
                         onMouseDown={(e) => handleResizeStart(e, column.key)}
-                        className='absolute right-0 top-0 h-full w-1 cursor-col-resize hover:bg-primary-main active:bg-primary-dark transition-colors z-20'
+                        className='absolute top-0 h-full cursor-col-resize z-20 group/resize'
                         style={{
-                          opacity: resizingColumn === column.key ? 1 : 0,
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.opacity = "1";
-                        }}
-                        onMouseLeave={(e) => {
-                          if (resizingColumn !== column.key) {
-                            e.currentTarget.style.opacity = "0";
-                          }
-                        }}
-                      />
+                          right: -4,
+                          width: 8,
+                        }}>
+                        <div className='absolute inset-0 hover:bg-primary-main/0 group-hover/resize:bg-primary-main/20 transition-colors' />
+                        <div
+                          className='absolute right-[3px] top-0 h-full w-0.5 bg-transparent group-hover/resize:bg-primary-main transition-colors'
+                          style={{
+                            backgroundColor: resizingColumn === column.key ? "#3b82f6" : undefined,
+                          }}
+                        />
+                      </div>
                     </th>
                   ))}
               </tr>
@@ -373,13 +361,34 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
                         const value = getAttributeValue(candidate, column.key);
                         const isDate = column.key === "date_of_birth" && value !== "-";
                         const isLink = column.key === "linkedin_link" && value !== "-";
+                        const isPhoto = column.key === "photo_url";
 
                         return (
                           <td
                             key={column.key}
                             style={{width: column.width, minWidth: column.width, maxWidth: column.width}}
-                            className={`px-4 py-4 text-sm ${column.key === "full_name" ? "text-neutral-900 font-medium" : "text-neutral-600"}`}>
-                            {isDate ? (
+                            className={`px-4 py-4 text-center text-sm ${
+                              column.key === "full_name" ? "text-neutral-900 font-medium" : "text-neutral-600"
+                            }`}>
+                            {isPhoto ? (
+                              value !== "-" ? (
+                                <div className='flex items-center justify-center gap-2'>
+                                  <img
+                                    src={value}
+                                    alt='Candidate'
+                                    className='h-10 w-10  rounded-full object-cover border border-neutral-200'
+                                    onError={(e) => {
+                                      console.error("Image failed to load:", value);
+                                      e.currentTarget.src =
+                                        'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40"%3E%3Crect width="40" height="40" fill="%23e5e7eb"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="16" fill="%236b7280"%3E?%3C/text%3E%3C/svg%3E';
+                                    }}
+                                    onLoad={() => console.log("Image loaded:", value)}
+                                  />
+                                </div>
+                              ) : (
+                                <div className='h-10 w-10 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-400'>?</div>
+                              )
+                            ) : isDate ? (
                               formatDate(value)
                             ) : isLink ? (
                               <a

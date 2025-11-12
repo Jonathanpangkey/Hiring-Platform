@@ -96,3 +96,19 @@ export interface CandidateStore {
   updateCandidate: (id: string, candidate: Partial<Candidate>) => void;
   deleteCandidate: (id: string) => void;
 }
+
+export interface ColumnConfig {
+  key: string;
+  label: string;
+  width: number;
+  visible: boolean;
+}
+
+export interface SortConfig {
+  key: string;
+  direction: "asc" | "desc";
+}
+
+export interface FilterConfig {
+  [key: string]: string;
+}
