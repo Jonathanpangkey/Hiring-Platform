@@ -30,8 +30,60 @@ npm run dev
 ```
 
 ---
+## 1. Complete User Journey
 
-## 4. Key Features Implemented
+### Admin Flow:
+1. **Create Job Posting**
+   - Admin clicks "+ Create Job" button on job list page
+   - Fills in job details (title, description, department, salary, etc.)
+   - Configures required profile fields (Mandatory/Optional/Off)
+   - Two options:
+     - **Save as Active** (default) → Job immediately visible to applicants
+     - **Save as Draft** → Job saved but hidden from applicants
+
+2. **Manage Job Status**
+   - Each job card displays current status badge (Draft/Active/Inactive)
+   - Click three-dot menu (⋮) on job card
+   - Select status from dropdown:
+     - **Draft** → Job hidden from applicants, editable by admin
+     - **Active** → Job visible and accepting applications
+     - **Inactive** → Job hidden but preserves existing applications
+
+3. **View Applicants**
+   - Click "Manage Job" button on specific job card
+   - Opens Candidate Management Page for that job
+   - View all applicants who applied to that specific job
+   - Table shows: Name, Email, Phone, Gender, LinkedIn, Domicile, Applied Date, Profile Picture
+   - Use filtering, sorting, and pagination to manage candidates
+
+### Applicant Flow:
+1. **Browse Jobs**
+   - Visit job list page (shows only Active jobs)
+   - View job cards with title, salary, company info
+
+2. **Apply to Job**
+   - Click on job card to view details
+   - Click "Apply Now" button
+   - Form dynamically renders based on admin's field configuration:
+     - Mandatory fields → Must be filled (validation enforced)
+     - Optional fields → Can be skipped
+     - Hidden fields → Not shown in form
+
+3. **Submit Application**
+   - Fill in required information
+   - Capture profile picture via hand gesture (3-finger pose)
+   - Submit application
+   - Success toast notification displayed
+   - Application stored and linked to specific job
+
+4. **Admin Reviews Application**
+   - Admin sees the application in Candidate Management Page
+   - Can view, sort, and filter all applicants for that job
+
+---
+
+
+## 2. Key Features Implemented
 
 ### Admin (Recruiter)
 1. **Job List Page**
@@ -69,7 +121,7 @@ npm run dev
 
 ---
 
-## 5. Optional Enhancements Added
+## 3. Optional Enhancements Added
 
 1. **Save as Draft Feature**
    - Admins can save incomplete job postings as drafts
@@ -104,7 +156,7 @@ npm run dev
 
 ---
 
-## 6. Design or Logic Assumptions
+## 4. Design or Logic Assumptions
 
 1. **Field Configuration Logic**
    - `required: true` → Field is mandatory (validation enforced)
@@ -126,7 +178,7 @@ npm run dev
 
 ---
 
-## 7. Known Limitations
+## 5. Known Limitations
 
 1. **No Persistent Backend**
    - All data stored in localStorage via Zustand
