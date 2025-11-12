@@ -417,7 +417,7 @@ export default function CandidateTable({candidates}: CandidateTableProps) {
 
       {/* Pagination */}
       {filteredAndSortedCandidates.length > 0 && (
-        <div className='flex flex-col md:flex-row items-center justify-between'>
+        <div className='flex flex-col gap-2 md:flex-row items-center justify-between'>
           <div className='flex items-center gap-2'>
             <span className='text-sm text-neutral-600'>Rows per page:</span>
             <Select
