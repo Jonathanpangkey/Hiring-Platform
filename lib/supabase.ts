@@ -29,22 +29,3 @@ export const uploadCandidatePhoto = async (file: File, candidateId: string): Pro
     return null;
   }
 };
-
-export const deleteCandidatePhoto = async (photoUrl: string): Promise<boolean> => {
-  try {
-    const filePath = photoUrl.split("/candidate-profiles/").pop();
-    if (!filePath) return false;
-
-    const {error} = await supabase.storage.from("candidate-profiles").remove([`candidate-photos/${filePath}`]);
-
-    if (error) {
-      console.error("Delete error:", error);
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("Delete failed:", error);
-    return false;
-  }
-};
