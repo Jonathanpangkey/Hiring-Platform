@@ -2,7 +2,7 @@
 
 import {Job} from "@/app/types/jobType";
 import {Button} from "@/components/ui/button";
-import {formatDate} from "@/app/lib/utils/utils";
+import {formatDate} from "@/lib/formatting/utils";
 import {useRouter} from "next/navigation";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator} from "@/components/ui/dropdown-menu";
 import {MoreVertical, CheckCircle, XCircle, Trash2} from "lucide-react";

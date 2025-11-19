@@ -12,7 +12,7 @@ import provinces from "@/data/province";
 import countryNumber from "@/data/country-no";
 import {cn} from "@/lib/utils";
 import {uploadCandidatePhoto} from "@/lib/supabase";
-import {generateId} from "@/app/lib/utils/utils";
+import {generateId} from "@/lib/formatting/utils";
 import {validateForm, isValidLinkedInUrl} from "@/lib/utils";
 import type {FormData, FormField, CountryCode} from "@/app/types/jobType";
 

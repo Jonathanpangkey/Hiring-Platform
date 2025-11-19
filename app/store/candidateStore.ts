@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
-import {generateId} from "@/app/lib/utils/utils";
+import {generateId} from "@/lib/formatting/utils";
 import {Candidate} from "../types/jobType";
 import {CandidateStore} from "../types/jobType";
 

@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useJobStore} from "@/app/store/jobStore";
-import {DEFAULT_FIELD_CONFIG} from "@/app/lib/data/jobList";
+import {DEFAULT_FIELD_CONFIG} from "@/lib/data/jobList";
 import {FieldConfig, FieldValidation} from "@/app/types/jobType";
 import FieldConfigPanel from "./FieldConfigPanel";
 import {toast} from "sonner";

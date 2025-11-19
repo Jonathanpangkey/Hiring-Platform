@@ -7,7 +7,7 @@ import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Candidate, ColumnConfig, FilterConfig, SortConfig} from "@/app/types/jobType";
-import {formatDate} from "@/app/lib/utils/utils";
+import {formatDate} from "@/lib/formatting/utils";
 import {ChevronUp, ChevronDown, ChevronsUpDown, GripVertical, X, Filter} from "lucide-react";
 
 interface CandidateTableProps {

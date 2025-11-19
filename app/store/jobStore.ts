@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {persist} from "zustand/middleware";
 import {Job} from "@/app/types/jobType";
-import {generateId} from "@/app/lib/utils/utils";
+import {generateId} from "@/lib/formatting/utils";
 import {JobStore} from "@/app/types/jobType";
 
 export const useJobStore = create<JobStore>()(
