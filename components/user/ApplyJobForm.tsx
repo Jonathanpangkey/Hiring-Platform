@@ -187,7 +187,7 @@ export default function ApplyJobForm() {
           <button onClick={() => router.back()} className='p-2 hover:bg-neutral-50 rounded-lg transition-colors'>
             <ArrowLeft className='w-5 h-5 text-neutral-700' />
           </button>
-          <h1 className='text-lg font-semibold text-neutral-900'>Apply {job.title} at Rakamin</h1>
+          <h1 className='text-lg font-semibold text-neutral-900'>Apply {job.title} at company</h1>
         </div>
 
         <div className='flex-1 overflow-y-auto px-6 py-6'>

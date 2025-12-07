@@ -20,7 +20,7 @@ export default function UserJobCard({job, isSelected, onClick}: UserJobCardProps
 
       <div className='flex items-center gap-2 text-sm text-neutral-600 mb-2'>
         <Briefcase className='w-4 h-4' />
-        <span>Rakamin • {job.department}</span>
+        <span>Company • {job.department}</span>
       </div>
 
       {/* <div className='flex items-center gap-2 text-sm text-neutral-600 mb-3'>

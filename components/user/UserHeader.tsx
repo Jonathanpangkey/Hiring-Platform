@@ -8,7 +8,7 @@ export default function UserHeader() {
           <div className='w-8 h-8 bg-primary-main rounded flex items-center justify-center'>
             <span className='text-white font-bold text-sm'>R</span>
           </div>
-          <h1 className='text-lg font-bold text-neutral-900'>Rakamin</h1>
+          <h1 className='text-lg font-bold text-neutral-900'>company</h1>
         </div>
 
         <div className='flex items-center gap-3'>

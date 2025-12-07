@@ -5,35 +5,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* Primary Colors (Teal) */
-  --color-primary-50: #e0f7f8;
-  --color-primary-100: #b3edee;
-  --color-primary-200: #80e2e5;
-  --color-primary-300: #4dd7db;
-  --color-primary-400: #26ced4;
-  --color-primary-500: #01959f; /* main */
-  --color-primary-600: #018a94;
-  --color-primary-700: #016a73;
-  --color-primary-800: #015159;
-  --color-primary-900: #013840;
-  --color-primary-main: #01959f;
-  --color-primary-light: #e0f7f8;
-  --color-primary-dark: #016a73;
+  /* Primary Colors (Blue) */
+  --color-primary-50: #e3eaf2;
+  --color-primary-100: #b8cbe0;
+  --color-primary-200: #8aa9cc;
+  --color-primary-300: #5c87b8;
+  --color-primary-400: #396da8;
+  --color-primary-500: #134686; /* main */
+  --color-primary-600: #113f79;
+  --color-primary-700: #0e335f;
+  --color-primary-800: #0a2846;
+  --color-primary-900: #071d30;
+  --color-primary-main: #134686;
+  --color-primary-light: #e3eaf2;
+  --color-primary-dark: #0e335f;
 
   /* Secondary Colors (Yellow) */
-  --color-secondary-50: #fef4e0;
-  --color-secondary-100: #fde8b3;
-  --color-secondary-200: #fcdb80;
-  --color-secondary-300: #fbce4d;
-  --color-secondary-400: #fbc037; /* main */
-  --color-secondary-500: #e5a921;
-  --color-secondary-600: #cc941d;
-  --color-secondary-700: #b37f19;
-  --color-secondary-800: #996a15;
-  --color-secondary-900: #805511;
-  --color-secondary-main: #fbc037;
-  --color-secondary-light: #fef4e0;
-  --color-secondary-dark: #e5a921;
+  --color-secondary-50: #fff4e5;
+  --color-secondary-100: #ffe1bc;
+  --color-secondary-200: #ffcd8f;
+  --color-secondary-300: #ffb962;
+  --color-secondary-400: #ffa83f; /* main */
+  --color-secondary-500: #feb21a;
+  --color-secondary-600: #e1a018;
+  --color-secondary-700: #b97f13;
+  --color-secondary-800: #91610f;
+  --color-secondary-900: #70490b;
+  --color-secondary-main: #feb21a;
+  --color-secondary-light: #fff4e5;
+  --color-secondary-dark: #b97f13;
 
   /* Neutral Colors */
   --color-neutral-10: #ffffff;
@@ -73,18 +73,18 @@
   --color-status-draft-text: #374151;
   --color-status-draft-border: #d1d5db;
 
-  /* Border Radius */
-  --radius-sm: 0.25rem; /* 4px */
-  --radius-md: 0.5rem; /* 8px */
-  --radius-lg: 0.75rem; /* 12px */
-  --radius-xl: 1rem; /* 16px */
+  /* Border Radius - Adjusted for personal preference */
+  --radius-sm: 0.3rem; /* 5px */
+  --radius-md: 0.6rem; /* 10px */
+  --radius-lg: 0.9rem; /* 14px */
+  --radius-xl: 1.2rem; /* 20px */
 
-  /* Box Shadows */
-  --shadow-modal: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
-  --shadow-button: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
-  --shadow-input: 1px 2px 2px 0px rgba(0, 0, 0, 0.12);
-  --shadow-card: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+  /* Box Shadows - Slightly enhanced for a modern look */
+  --shadow-modal: 0px 6px 12px 0px rgba(0, 0, 0, 0.15); /* More depth for modals */
+  --shadow-button: 0px 2px 4px 0px rgba(0, 0, 0, 0.15); /* Slightly stronger for buttons */
+  --shadow-input: 1px 3px 4px 0px rgba(0, 0, 0, 0.15); /* Enhanced for better focus */
+  --shadow-card: 0px 3px 6px 0px rgba(0, 0, 0, 0.1); /* Subtle depth for cards */
+  --shadow-card-hover: 0px 5px 15px 0px rgba(0, 0, 0, 0.2); /* Stronger hover effect */
 }
 
 /* ============================================

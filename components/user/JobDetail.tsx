@@ -21,7 +21,7 @@ export default function JobDetail({job}: JobDetailProps) {
           <div className='flex items-center gap-6 text-neutral-600 mb-6'>
             <div className='flex items-center gap-2'>
               <Briefcase className='w-5 h-5' />
-              <span>Rakamin</span>
+              <span>Company</span>
             </div>
           </div>
         </div>
