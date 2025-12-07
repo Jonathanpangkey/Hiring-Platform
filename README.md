@@ -1,5 +1,5 @@
 #### Project Overview
-A frontend only hiring management web designed for two user roles: Admin (Recruiter) and Applicant (Job Seeker). The platform features dynamic form generation based on configurable job requirements, allowing admins to customize which fields are mandatory, optional, or hidden for each job posting.
+A hiring management web (frontend only) designed for two user roles: Admin (Recruiter) and Applicant (Job Seeker). The platform features dynamic form generation based on configurable job requirements, allowing admins to customize which fields are mandatory, optional, or hidden for each job posting.
 
 <img width="1440" height="900" alt="Screenshot 2025-12-07 at 15 06 34" src="https://github.com/user-attachments/assets/b8d55f72-7fa5-4e16-b277-31f7d9bb2613" />
 <img width="1440" height="900" alt="Screenshot 2025-12-07 at 15 06 49" src="https://github.com/user-attachments/assets/b5da0df5-3f04-42cc-b987-c6c5ce91e99a" />
